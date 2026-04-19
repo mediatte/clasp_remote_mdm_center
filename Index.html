@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg: #efe7da;
+        --panel: rgba(255, 251, 245, 0.84);
+        --panel-strong: rgba(255, 252, 247, 0.96);
+        --ink: #1e2a31;
+        --muted: #67747c;
+        --line: rgba(30, 42, 49, 0.12);
+        --accent: #d96f3a;
+        --accent-deep: #ae4b20;
+        --accent-soft: rgba(217, 111, 58, 0.14);
+        --success: #2d7a4a;
+        --success-soft: rgba(45, 122, 74, 0.14);
+        --warning: #9b6500;
+        --warning-soft: rgba(155, 101, 0, 0.14);
+        --error: #b13e34;
+        --error-soft: rgba(177, 62, 52, 0.14);
+        --shadow: 0 26px 44px rgba(72, 50, 28, 0.1);
+        --hero-start: rgba(28, 38, 47, 0.97);
+        --hero-end: rgba(44, 58, 69, 0.9);
+        --hero-ink: #fff8f1;
+        --ambient-a: rgba(217, 111, 58, 0.18);
+        --ambient-b: rgba(31, 77, 72, 0.14);
+        --radius-xl: 30px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+      }
+
+      body[data-theme="dark"] {
+        --bg: #111717;
+        --panel: rgba(24, 31, 31, 0.86);
+        --panel-strong: rgba(30, 38, 38, 0.96);
+        --ink: #edf1ec;
+        --muted: #9ea8a6;
+        --line: rgba(237, 241, 236, 0.12);
+        --accent: #f08a4a;
+        --accent-deep: #c65d21;
+        --accent-soft: rgba(240, 138, 74, 0.18);
+        --success: #79c494;
+        --success-soft: rgba(121, 196, 148, 0.18);
+        --warning: #f2bf5b;
+        --warning-soft: rgba(242, 191, 91, 0.16);
+        --error: #f28b83;
+        --error-soft: rgba(242, 139, 131, 0.16);
+        --shadow: 0 26px 44px rgba(0, 0, 0, 0.28);
+        --hero-start: rgba(243, 132, 70, 0.18);
+        --hero-end: rgba(24, 31, 31, 0.92);
+        --hero-ink: #f7f4ee;
+        --ambient-a: rgba(240, 138, 74, 0.12);
+        --ambient-b: rgba(111, 171, 156, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        color-scheme: light;
+      }
+
+      body[data-theme="dark"] {
+        color-scheme: dark;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: 'Noto Sans KR', 'Manrope', sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, var(--ambient-a), transparent 28%),
+          radial-gradient(circle at bottom right, var(--ambient-b), transparent 26%),
+          linear-gradient(180deg, color-mix(in srgb, var(--bg) 88%, white 12%) 0%, var(--bg) 100%);
+        transition: background 180ms ease, color 180ms ease;
+      }
+
+      .shell {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 26px 0 40px;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 28px;
+        border-radius: var(--radius-xl);
+        background: linear-gradient(145deg, var(--hero-start), var(--hero-end));
+        color: var(--hero-ink);
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        right: -72px;
+        bottom: -92px;
+        width: 260px;
+        height: 260px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(255, 205, 166, 0.26), transparent 68%);
+        pointer-events: none;
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 248, 241, 0.1);
+        border: 1px solid rgba(255, 248, 241, 0.16);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero-controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .control {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(255, 248, 241, 0.08);
+        border: 1px solid rgba(255, 248, 241, 0.14);
+        font-size: 13px;
+        color: var(--hero-ink);
+      }
+
+      .control label {
+        margin: 0;
+        font-size: 12px;
+        opacity: 0.84;
+      }
+
+      .control select {
+        border: 0;
+        background: transparent;
+        color: var(--hero-ink);
+        font: inherit;
+        font-weight: 700;
+      }
+
+      .control select:focus {
+        outline: none;
+      }
+
+      .control option {
+        color: #101818;
+      }
+
+      h1 {
+        margin: 18px 0 10px;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 0.98;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-description {
+        margin: 0;
+        max-width: 760px;
+        color: rgba(255, 248, 241, 0.82);
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .hero-meta {
+        margin-top: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 248, 241, 0.08);
+        border: 1px solid rgba(255, 248, 241, 0.14);
+        font-size: 13px;
+      }
+
+      .mono {
+        font-family: 'IBM Plex Mono', monospace;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+        gap: 20px;
+        margin-top: 22px;
+        align-items: start;
+      }
+
+      .panel {
+        border-radius: var(--radius-xl);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .panel.loading {
+        opacity: 0.68;
+        pointer-events: none;
+      }
+
+      .panel-body {
+        padding: 24px;
+      }
+
+      .panel h2 {
+        margin: 0 0 8px;
+        font-size: 20px;
+        letter-spacing: -0.03em;
+      }
+
+      .panel-copy {
+        margin: 0 0 22px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .panel-note {
+        margin: -10px 0 22px;
+        color: var(--accent-deep);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 14px;
+      }
+
+      .field-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid color-mix(in srgb, var(--line) 100%, transparent 0%);
+        background: color-mix(in srgb, var(--panel-strong) 88%, white 12%);
+        color: var(--ink);
+        border-radius: var(--radius-md);
+        padding: 14px 15px;
+        font: inherit;
+        transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+
+      textarea {
+        min-height: 124px;
+        resize: vertical;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: color-mix(in srgb, var(--accent) 64%, white 36%);
+        box-shadow: 0 0 0 4px var(--accent-soft);
+      }
+
+      .button-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      button {
+        appearance: none;
+        border: 0;
+        border-radius: 999px;
+        padding: 13px 18px;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease, background 140ms ease;
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        opacity: 0.58;
+        cursor: wait;
+      }
+
+      .primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+        color: #fffaf5;
+        box-shadow: 0 14px 28px rgba(217, 111, 58, 0.24);
+      }
+
+      .secondary {
+        background: color-mix(in srgb, var(--line) 60%, transparent 40%);
+        color: var(--ink);
+      }
+
+      .feedback {
+        display: none;
+        margin-top: 16px;
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .feedback.show {
+        display: block;
+      }
+
+      .feedback.success {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+
+      .feedback.error {
+        background: var(--error-soft);
+        color: var(--error);
+      }
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+
+      .toolbar-note {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .request-card {
+        padding: 18px;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+      }
+
+      .request-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        align-items: flex-start;
+        margin-bottom: 10px;
+      }
+
+      .request-title {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.28;
+        letter-spacing: -0.02em;
+      }
+
+      .status-pill {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 92px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .status-pill.pending {
+        background: var(--warning-soft);
+        color: var(--warning);
+      }
+
+      .status-pill.replied {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+
+      .status-pill.other {
+        background: color-mix(in srgb, var(--line) 60%, transparent 40%);
+        color: var(--ink);
+      }
+
+      .meta-grid {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .request-section {
+        margin-top: 12px;
+      }
+
+      .request-section strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .reply-box {
+        padding: 14px;
+        border-radius: var(--radius-md);
+        background: var(--success-soft);
+        border: 1px solid color-mix(in srgb, var(--success) 20%, transparent 80%);
+      }
+
+      .empty {
+        padding: 28px 18px;
+        text-align: center;
+        color: var(--muted);
+        border: 1px dashed var(--line);
+        border-radius: var(--radius-lg);
+        background: color-mix(in srgb, var(--panel-strong) 75%, transparent 25%);
+      }
+
+      @media (max-width: 900px) {
+        .shell {
+          width: min(100vw - 24px, 1180px);
+          padding-top: 18px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero,
+        .panel-body {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-top">
+          <span class="eyebrow" id="heroEyebrow">학생 요청 워크플로</span>
+          <div class="hero-controls">
+            <div class="control">
+              <label for="localeSelect" id="languageControlLabel">언어</label>
+              <select id="localeSelect">
+                <option value="ko">한국어</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <button class="control" id="themeToggle" type="button"></button>
+          </div>
+        </div>
+
+        <h1 id="heroTitle">학생 요청 센터</h1>
+        <p class="hero-description" id="heroDescription">
+          필요한 접근 권한을 한 번 요청하고, 이 페이지에서 답변까지 계속 확인하세요.
+        </p>
+
+        <div class="hero-meta">
+          <div class="meta-pill">
+            <span id="signedInLabel">로그인 계정</span>
+            <span class="mono" id="userEmail">계정 확인 중...</span>
+          </div>
+          <div class="meta-pill">
+            <span id="studentIdLabel">학번</span>
+            <span id="studentIdValue">-</span>
+          </div>
+          <div class="meta-pill">
+            <span id="studentNameLabel">이름</span>
+            <span id="studentNameValue">-</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel" id="formPanel">
+          <div class="panel-body">
+            <h2 id="formTitle">새 요청 보내기</h2>
+            <p class="panel-copy" id="formCopy">
+              필요한 접근 권한이나 승인 내용을 적어 주세요. 요청은 시트에 기록되고 교사에게 즉시 전달됩니다.
+            </p>
+            <p class="panel-note" id="formNotice">교사가 답장을 보내면 이메일이 발송됩니다.</p>
+
+            <form id="requestForm">
+              <label>
+                <span class="field-label" id="requestedItemLabel">설치 또는 허용 앱/주소</span>
+                <input id="requestedItem" name="requestedItem" maxlength="200" required>
+              </label>
+
+              <label>
+                <span class="field-label" id="reasonLabel">사유</span>
+                <textarea id="reason" name="reason" maxlength="1000" required></textarea>
+              </label>
+
+              <label>
+                <span class="field-label" id="detailsLabel">기타사항</span>
+                <textarea id="details" name="details" maxlength="3000"></textarea>
+              </label>
+
+              <div class="button-row">
+                <button class="primary" id="submitButton" type="submit">요청 보내기</button>
+              </div>
+            </form>
+
+            <div class="feedback" id="feedback"></div>
+          </div>
+        </div>
+
+        <div class="panel" id="historyPanel">
+          <div class="panel-body">
+            <div class="toolbar">
+              <div>
+                <h2 id="historyTitle">내 요청 내역</h2>
+              </div>
+              <button class="secondary" id="refreshButton" type="button">새로고침</button>
+            </div>
+
+            <div class="stack" id="requestList">
+              <div class="empty">요청 내역을 불러오는 중입니다...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const STORAGE_KEYS = {
+        locale: 'student-request-locale',
+        theme: 'student-request-theme',
+      };
+
+      const TEXT = {
+        ko: {
+          appTitle: '학생 요청 센터',
+          heroEyebrow: '학생 요청 워크플로',
+          heroTitle: '학생 요청 센터',
+          heroDescription: '필요한 접근 권한이나 요청 사항을 제출하고, 이 페이지에서 교사 답변까지 계속 확인하세요.',
+          signedInLabel: '로그인 계정',
+          studentIdLabel: '학번',
+          studentNameLabel: '이름',
+          unknownProfileValue: '미등록',
+          checkingAccount: '계정 확인 중...',
+          accountUnavailable: '계정을 확인할 수 없습니다',
+          language: '언어',
+          themeToDark: '다크 모드',
+          themeToLight: '라이트 모드',
+          formTitle: '새 요청 보내기',
+          formCopy: '설치가 필요하거나 허용이 필요한 앱 또는 주소를 적어 주세요. 요청은 시트에 기록되고 교사에게 즉시 전달됩니다.',
+          formNotice: '교사가 답장을 보내면 이메일이 발송됩니다.',
+          requestedItem: '설치 또는 허용 앱/주소',
+          requestedItemPlaceholder: '예: Canva 앱, https://www.canva.com/edu/ 또는 수업용 사이트 주소',
+          reason: '사유',
+          reasonPlaceholder: '예: 디자인 과제 제출과 수업 활동에 필요합니다.',
+          details: '기타사항',
+          detailsPlaceholder: '예: 사용 학년/반, 필요한 기간, 설치가 필요한 기기',
+          sendRequest: '요청 보내기',
+          sending: '전송 중...',
+          historyTitle: '내 요청 내역',
+          refresh: '새로고침',
+          loadingRequests: '요청 내역을 불러오는 중입니다...',
+          noRequests: '아직 제출한 요청이 없습니다. 왼쪽 폼에서 첫 요청을 보내세요.',
+          requestId: '요청 ID',
+          submittedAt: '제출 시간',
+          reasonLabel: '사유',
+          detailsLabel: '기타사항',
+          teacherReply: '교사 답변',
+          replySentAt: '답변 발송',
+          untitledRequest: '제목 없는 요청',
+          unexpectedError: '예기치 않은 오류가 발생했습니다.',
+          status_pending: '대기',
+          status_replied: '답변 완료',
+          status_reply_error: '답변 오류',
+          status_other: '처리 중',
+          submitSuccessNotified: '요청이 접수되었고 담당 교사에게 이메일이 발송되었습니다.',
+          submitSuccessNoTeacher: '요청은 저장되었지만 teachers 탭에 활성 교사 이메일이 아직 없습니다.',
+          identityUnavailable: '현재 로그인한 Google 계정을 확인할 수 없습니다. 도메인 사용자로 웹 앱을 배포해 Session.getActiveUser().getEmail() 값을 읽을 수 있게 해야 합니다.',
+          itemRequired: '설치 또는 허용 앱/주소를 입력하세요.',
+          reasonRequired: '사유를 입력하세요.',
+          itemTooLong: '설치 또는 허용 앱/주소는 200자 이하로 입력하세요.',
+          reasonTooLong: '사유는 1000자 이하로 입력하세요.',
+          detailsTooLong: '기타사항은 3000자 이하로 입력하세요.',
+          requestRowMissing: '요청은 저장되었지만 방금 추가된 행을 다시 찾지 못했습니다.'
+        },
+        en: {
+          appTitle: 'Student Request Center',
+          heroEyebrow: 'Student Request Workflow',
+          heroTitle: 'Student Request Center',
+          heroDescription: 'Submit access requests and keep checking this page until a teacher reply arrives.',
+          signedInLabel: 'Signed in',
+          studentIdLabel: 'Student ID',
+          studentNameLabel: 'Name',
+          unknownProfileValue: 'Not set',
+          checkingAccount: 'Checking account...',
+          accountUnavailable: 'Account unavailable',
+          language: 'Language',
+          themeToDark: 'Dark Mode',
+          themeToLight: 'Light Mode',
+          formTitle: 'Send a New Request',
+          formCopy: 'Describe the app or URL that needs installation or approval. The request is logged to the sheet and sent to the teachers immediately.',
+          formNotice: 'When a teacher sends a reply, an email will be delivered.',
+          requestedItem: 'App / URL to Install or Allow',
+          requestedItemPlaceholder: 'Example: Canva app, https://www.canva.com/edu/, or a class website URL',
+          reason: 'Reason',
+          reasonPlaceholder: 'Example: Needed for class projects and assignment submission.',
+          details: 'Other Notes',
+          detailsPlaceholder: 'Example: Grade/class, required period, devices needing installation',
+          sendRequest: 'Send Request',
+          sending: 'Sending...',
+          historyTitle: 'Your Requests',
+          refresh: 'Refresh',
+          loadingRequests: 'Loading your request history...',
+          noRequests: 'No requests yet. Send your first request from the form.',
+          requestId: 'Request ID',
+          submittedAt: 'Submitted',
+          reasonLabel: 'Reason',
+          detailsLabel: 'Other Notes',
+          teacherReply: 'Teacher Reply',
+          replySentAt: 'Reply Sent',
+          untitledRequest: 'Untitled Request',
+          unexpectedError: 'An unexpected error occurred.',
+          status_pending: 'Pending',
+          status_replied: 'Replied',
+          status_reply_error: 'Reply Error',
+          status_other: 'In Progress',
+          submitSuccessNotified: 'The request was submitted and the teachers were notified by email.',
+          submitSuccessNoTeacher: 'The request was saved, but there is no active teacher email in the teachers tab yet.',
+          identityUnavailable: 'The signed-in Google account could not be identified. Deploy the web app for your Google Workspace domain so Session.getActiveUser().getEmail() is available.',
+          itemRequired: 'Enter the app or URL to install or allow.',
+          reasonRequired: 'Enter the reason.',
+          itemTooLong: 'The app or URL to install or allow must be 200 characters or fewer.',
+          reasonTooLong: 'The reason must be 1000 characters or fewer.',
+          detailsTooLong: 'Other notes must be 3000 characters or fewer.',
+          requestRowMissing: 'The request was saved, but the newly added row could not be found afterward.'
+        }
+      };
+
+      const SERVER_MESSAGE_KEYS = {
+        '요청이 접수되었고 담당 교사에게 이메일이 발송되었습니다.': 'submitSuccessNotified',
+        '요청은 저장되었지만 teachers 탭에 활성 교사 이메일이 아직 없습니다.': 'submitSuccessNoTeacher',
+        '현재 로그인한 Google 계정을 확인할 수 없습니다. 도메인 사용자로 웹 앱을 배포해 Session.getActiveUser().getEmail() 값을 읽을 수 있게 해야 합니다.': 'identityUnavailable',
+        '설치 또는 허용 앱/주소를 입력하세요.': 'itemRequired',
+        '사유를 입력하세요.': 'reasonRequired',
+        '설치 또는 허용 앱/주소는 200자 이하로 입력하세요.': 'itemTooLong',
+        '사유는 1000자 이하로 입력하세요.': 'reasonTooLong',
+        '기타사항은 3000자 이하로 입력하세요.': 'detailsTooLong',
+        '요청은 저장되었지만 방금 추가된 행을 다시 찾지 못했습니다.': 'requestRowMissing',
+        'Request submitted. Teachers were notified by email.': 'submitSuccessNotified',
+        'Request submitted. No teacher email addresses are configured yet in the teachers tab.': 'submitSuccessNoTeacher',
+        'This web app could not read the signed-in Google account. Deploy it for your Google Workspace domain so Session.getActiveUser().getEmail() is available.': 'identityUnavailable',
+        'Requested item is required.': 'itemRequired',
+        'Reason is required.': 'reasonRequired',
+        'Requested item must be 200 characters or fewer.': 'itemTooLong',
+        'Reason must be 1000 characters or fewer.': 'reasonTooLong',
+        'Details must be 3000 characters or fewer.': 'detailsTooLong',
+        'The request was saved, but the new row could not be located afterward.': 'requestRowMissing'
+      };
+
+      const state = {
+        identifiable: false,
+        loading: false,
+        submitting: false,
+        locale: getStoredLocale_(),
+        theme: getStoredTheme_(),
+        model: null,
+        feedbackRaw: '',
+        feedbackType: 'success'
+      };
+
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('requestForm').addEventListener('submit', handleSubmit_);
+        document.getElementById('refreshButton').addEventListener('click', function() {
+          loadAppModel_(false);
+        });
+        document.getElementById('localeSelect').addEventListener('change', function(event) {
+          state.locale = event.target.value === 'en' ? 'en' : 'ko';
+          saveStoredValue_(STORAGE_KEYS.locale, state.locale);
+          renderChrome_();
+          if (state.model) {
+            renderModel_(state.model);
+          } else {
+            renderLoadingState_();
+          }
+        });
+        document.getElementById('themeToggle').addEventListener('click', function() {
+          state.theme = state.theme === 'dark' ? 'light' : 'dark';
+          saveStoredValue_(STORAGE_KEYS.theme, state.theme);
+          applyTheme_();
+          renderChrome_();
+        });
+
+        applyTheme_();
+        renderChrome_();
+        renderLoadingState_();
+        loadAppModel_(false);
+      });
+
+      function loadAppModel_(silent) {
+        setPanelsLoading_(!silent);
+
+        google.script.run
+          .withSuccessHandler(function(model) {
+            state.model = model || null;
+            if (!silent) {
+              setPanelsLoading_(false);
+            }
+            renderChrome_();
+            renderModel_(model || {});
+          })
+          .withFailureHandler(function(error) {
+            if (!silent) {
+              setPanelsLoading_(false);
+            }
+            showFeedback_(extractErrorMessage_(error), 'error');
+            renderAccountError_(extractErrorMessage_(error));
+          })
+          .getStudentAppModel();
+      }
+
+      function handleSubmit_(event) {
+        event.preventDefault();
+        if (state.submitting || !state.identifiable) {
+          return;
+        }
+
+        state.submitting = true;
+        updateSubmitState_();
+        hideFeedback_();
+
+        google.script.run
+          .withSuccessHandler(function(result) {
+            state.submitting = false;
+            state.model = {
+              appName: state.model && state.model.appName ? state.model.appName : '',
+              defaultLocale: state.model && state.model.defaultLocale ? state.model.defaultLocale : 'ko',
+              email: state.model && state.model.email ? state.model.email : '',
+              studentId: state.model && state.model.studentId ? state.model.studentId : '',
+              studentName: state.model && state.model.studentName ? state.model.studentName : '',
+              studentDisplay: state.model && state.model.studentDisplay ? state.model.studentDisplay : '',
+              identifiable: true,
+              identityMessage: '',
+              requests: result && result.requests ? result.requests : []
+            };
+            updateSubmitState_();
+            document.getElementById('requestForm').reset();
+            renderModel_(state.model);
+            showFeedback_(result && result.message ? result.message : t_('submitSuccessNotified'), 'success');
+          })
+          .withFailureHandler(function(error) {
+            state.submitting = false;
+            updateSubmitState_();
+            showFeedback_(extractErrorMessage_(error), 'error');
+          })
+          .submitRequest({
+            requestedItem: document.getElementById('requestedItem').value,
+            reason: document.getElementById('reason').value,
+            details: document.getElementById('details').value
+          });
+      }
+
+      function renderChrome_() {
+        document.documentElement.lang = state.locale;
+        document.title = t_('appTitle');
+        document.getElementById('heroEyebrow').textContent = t_('heroEyebrow');
+        document.getElementById('heroTitle').textContent = t_('heroTitle');
+        document.getElementById('heroDescription').textContent = t_('heroDescription');
+        document.getElementById('signedInLabel').textContent = t_('signedInLabel');
+        document.getElementById('studentIdLabel').textContent = t_('studentIdLabel');
+        document.getElementById('studentNameLabel').textContent = t_('studentNameLabel');
+        document.getElementById('languageControlLabel').textContent = t_('language');
+        document.getElementById('localeSelect').value = state.locale;
+        document.getElementById('themeToggle').textContent = state.theme === 'dark' ? t_('themeToLight') : t_('themeToDark');
+        document.getElementById('formTitle').textContent = t_('formTitle');
+        document.getElementById('formCopy').textContent = t_('formCopy');
+        document.getElementById('formNotice').textContent = t_('formNotice');
+        document.getElementById('requestedItemLabel').textContent = t_('requestedItem');
+        document.getElementById('reasonLabel').textContent = t_('reason');
+        document.getElementById('detailsLabel').textContent = t_('details');
+        document.getElementById('requestedItem').placeholder = t_('requestedItemPlaceholder');
+        document.getElementById('reason').placeholder = t_('reasonPlaceholder');
+        document.getElementById('details').placeholder = t_('detailsPlaceholder');
+        document.getElementById('historyTitle').textContent = t_('historyTitle');
+        document.getElementById('refreshButton').textContent = t_('refresh');
+        document.getElementById('userEmail').textContent = state.model && state.model.email
+          ? state.model.email
+          : (state.identifiable ? t_('accountUnavailable') : t_('checkingAccount'));
+        renderStudentProfile_();
+        updateSubmitState_();
+        renderFeedback_();
+      }
+
+      function renderModel_(model) {
+        state.identifiable = Boolean(model && model.identifiable);
+        document.getElementById('userEmail').textContent = model && model.email
+          ? model.email
+          : t_('accountUnavailable');
+
+        if (!state.identifiable) {
+          renderAccountError_(model && model.identityMessage ? model.identityMessage : t_('identityUnavailable'));
+          renderRequestList_([]);
+          return;
+        }
+
+        updateSubmitState_();
+        renderRequestList_(model && model.requests ? model.requests : []);
+        renderStudentProfile_();
+      }
+
+      function renderAccountError_(message) {
+        state.identifiable = false;
+        updateSubmitState_();
+        showFeedback_(message, 'error');
+      }
+
+      function renderStudentProfile_() {
+        const studentId = state.model && state.model.studentId
+          ? state.model.studentId
+          : t_('unknownProfileValue');
+        const studentName = state.model && state.model.studentName
+          ? state.model.studentName
+          : t_('unknownProfileValue');
+        document.getElementById('studentIdValue').textContent = studentId;
+        document.getElementById('studentNameValue').textContent = studentName;
+      }
+
+      function renderLoadingState_() {
+        document.getElementById('requestList').innerHTML =
+          '<div class="empty">' + escapeHtml_(t_('loadingRequests')) + '</div>';
+      }
+
+      function renderRequestList_(requests) {
+        const container = document.getElementById('requestList');
+
+        if (!requests || !requests.length) {
+          container.innerHTML =
+            '<div class="empty">' + escapeHtml_(t_('noRequests')) + '</div>';
+          return;
+        }
+
+        container.innerHTML = requests.map(function(request) {
+          const statusInfo = getStatusInfo_(request.status);
+          const detailsMarkup = request.details
+            ? '<div class="request-section"><strong>' + escapeHtml_(t_('detailsLabel')) + '</strong><div>' + escapeHtml_(request.details).replace(/\n/g, '<br>') + '</div></div>'
+            : '';
+          const replyMarkup = request.reply
+            ? '<div class="request-section"><strong>' + escapeHtml_(t_('teacherReply')) + '</strong><div class="reply-box">' + escapeHtml_(request.reply).replace(/\n/g, '<br>') + '</div>' +
+              (request.replySentAt ? '<div class="meta-grid" style="margin-top:10px;"><span>' + escapeHtml_(t_('replySentAt')) + ': ' + escapeHtml_(request.replySentAt) + '</span></div>' : '') +
+              '</div>'
+            : '';
+
+          return (
+            '<article class="request-card">' +
+              '<div class="request-top">' +
+                '<div><h3 class="request-title">' + escapeHtml_(request.requestedItem || t_('untitledRequest')) + '</h3></div>' +
+                '<span class="status-pill ' + statusInfo.className + '">' + escapeHtml_(statusInfo.label) + '</span>' +
+              '</div>' +
+              '<div class="meta-grid">' +
+                '<span class="mono">' + escapeHtml_(t_('requestId')) + ': ' + escapeHtml_(request.requestId || '') + '</span>' +
+                '<span>' + escapeHtml_(t_('submittedAt')) + ': ' + escapeHtml_(request.submittedAt || '') + '</span>' +
+              '</div>' +
+              '<div class="request-section"><strong>' + escapeHtml_(t_('reasonLabel')) + '</strong><div>' + escapeHtml_(request.reason || '').replace(/\n/g, '<br>') + '</div></div>' +
+              detailsMarkup +
+              replyMarkup +
+            '</article>'
+          );
+        }).join('');
+      }
+
+      function getStatusInfo_(status) {
+        const normalized = String(status || '').trim().toLowerCase();
+
+        if (normalized === 'pending' || normalized === '대기') {
+          return { className: 'pending', label: t_('status_pending') };
+        }
+
+        if (normalized === 'replied' || normalized === '답변 완료') {
+          return { className: 'replied', label: t_('status_replied') };
+        }
+
+        if (normalized === 'reply error' || normalized === '답변 오류') {
+          return { className: 'other', label: t_('status_reply_error') };
+        }
+
+        return {
+          className: 'other',
+          label: status ? String(status) : t_('status_other')
+        };
+      }
+
+      function setPanelsLoading_(isLoading) {
+        state.loading = Boolean(isLoading);
+        document.getElementById('formPanel').classList.toggle('loading', state.loading || state.submitting);
+        document.getElementById('historyPanel').classList.toggle('loading', state.loading);
+        document.getElementById('refreshButton').disabled = state.loading;
+      }
+
+      function updateSubmitState_() {
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = state.submitting || !state.identifiable;
+        submitButton.textContent = state.submitting ? t_('sending') : t_('sendRequest');
+      }
+
+      function showFeedback_(message, type) {
+        state.feedbackRaw = message || '';
+        state.feedbackType = type || 'success';
+        renderFeedback_();
+      }
+
+      function hideFeedback_() {
+        state.feedbackRaw = '';
+        renderFeedback_();
+      }
+
+      function renderFeedback_() {
+        const feedback = document.getElementById('feedback');
+        if (!state.feedbackRaw) {
+          feedback.textContent = '';
+          feedback.className = 'feedback';
+          return;
+        }
+
+        feedback.textContent = localizeServerMessage_(state.feedbackRaw);
+        feedback.className = 'feedback show ' + state.feedbackType;
+      }
+
+      function localizeServerMessage_(message) {
+        const key = SERVER_MESSAGE_KEYS[String(message || '')];
+        return key ? t_(key) : String(message || '');
+      }
+
+      function t_(key) {
+        return (TEXT[state.locale] && TEXT[state.locale][key]) || TEXT.ko[key] || key;
+      }
+
+      function applyTheme_() {
+        document.body.setAttribute('data-theme', state.theme);
+      }
+
+      function getStoredLocale_() {
+        try {
+          const locale = localStorage.getItem(STORAGE_KEYS.locale);
+          return locale === 'en' ? 'en' : 'ko';
+        } catch (error) {
+          return 'ko';
+        }
+      }
+
+      function getStoredTheme_() {
+        try {
+          const theme = localStorage.getItem(STORAGE_KEYS.theme);
+          if (theme === 'dark' || theme === 'light') {
+            return theme;
+          }
+        } catch (error) {
+          return 'light';
+        }
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+
+        return 'light';
+      }
+
+      function saveStoredValue_(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (error) {
+        }
+      }
+
+      function extractErrorMessage_(error) {
+        if (!error) {
+          return t_('unexpectedError');
+        }
+
+        return error.message || String(error);
+      }
+
+      function escapeHtml_(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+    </script>
+  </body>
+</html>
