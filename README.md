@@ -23,3 +23,4 @@ node scripts/sync-env.mjs
 
 이 두 파일과 `.env`는 `.gitignore`에 포함되어 있습니다.
 # clasp_remote_mdm_center
+# clasp_remote_mdm_center
